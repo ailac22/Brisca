@@ -1,0 +1,26 @@
+{
+  "name": "cartillas",
+  "version": "0.1.0",
+  "description": "cartillas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc && node build/index.js",
+    "tsc": "npx tscnp"
+  },
+  "author": "Iván Moreno",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-typescript": "^7.9.0",
+    "typescript": "^3.8.3"
+  }
+}
