@@ -4,16 +4,19 @@
   "description": "cartillas",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsc && node build/index.js",
-    "tsc": "npx tscnp"
+    "lint": "eslint src/**.ts",
+    "test": "mocha",
+    "start": "npx tsc && node build/index.js"
   },
   "author": "Iván Moreno",
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
+    "@types/node": "^13.13.2",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
+    "machina": "^4.0.2",
+    "save-dev": "0.0.1-security",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
@@ -21,6 +24,17 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "mocha": "^7.1.2",
     "typescript": "^3.8.3"
   }
 }

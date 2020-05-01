@@ -1,30 +1,33 @@
-/* import {Naipe, Palo} from './Naipe'
-import shuffle from 'lodash-es/shuffle' */
 import Naipe from './Naipe'
 import {Palo} from './Palo'
 import _ = require('lodash')
 
 export default class Baraja {
 
-    #baraja: Naipe[] = []
+    private baraja: Naipe[] = []
     
     constructor(){
 
         for (let numero: number = 1; numero <= 12; ++numero){
-                this.#baraja.push(new Naipe(numero,Palo.Bastos))
-                this.#baraja.push(new Naipe(numero,Palo.Oros))
-                this.#baraja.push(new Naipe(numero,Palo.Copas))
-                this.#baraja.push(new Naipe(numero,Palo.Espadas))
+                this.baraja.push(new Naipe(numero,Palo.Bastos))
+                this.baraja.push(new Naipe(numero,Palo.Oros))
+                this.baraja.push(new Naipe(numero,Palo.Copas))
+                this.baraja.push(new Naipe(numero,Palo.Espadas))
         }
             
-        this.#baraja = _.shuffle(this.#baraja)
+        this.baraja = _.shuffle(this.baraja)
     }
 
     toString(){
-        return this.#baraja.map((n) => n.toString() + " ").join();
+        return this.baraja.map((n) => n.toString() + " ").join();
     }
     getCard(){
-        return this.#baraja.pop()
+        console.log("length anterior: " + this.baraja.length)
+        return this.baraja.pop();
+    }
+
+    numCards(){
+        return this.baraja.length;
     }
 }
 
