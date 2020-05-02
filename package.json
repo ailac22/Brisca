@@ -6,15 +6,16 @@
   "scripts": {
     "typedoc": "typedoc --out docs src",
     "lint": "eslint src/**.ts",
-    "test": "npm run build && npx mocha './build/test/**/*.js'",
+    "test": "npm run build && ls ./build/test/ && npx mocha './build/test/**/*.js'",
     "build": "npx tsc",
     "build_tests": "",
-    "start": "npx tsc && node build/index.js"
+    "start": "npm run build && node build/index.js"
   },
   "author": "Iván Moreno",
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.2",
     "express": "^4.17.1",
