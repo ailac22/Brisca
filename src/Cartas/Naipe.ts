@@ -1,11 +1,19 @@
 import type { Palo } from "./Palo";
 const assert = require('assert').strict;
 
+/**
+ * Clase que representa una carta
+ *
+ */
+
 export default class Naipe {
 
     #numero = 0
     #palo: Palo
     
+    /**
+     * @return El palo de esta carta
+     */
     get palo(){
         return this.#palo
     }
@@ -20,7 +28,11 @@ export default class Naipe {
         this.#palo = palo;
     }
 
-    toString(){
+    equals(card: Naipe): boolean{
+        return this.palo == card.palo && this.numero == card.numero;
+    }
+
+    toString(): string{
         return `${this.#numero} de ${this.#palo}` ;
     }
 
