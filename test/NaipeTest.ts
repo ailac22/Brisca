@@ -1,5 +1,5 @@
 import Naipe from '../src/Cartas/Naipe'
-import {Palo} from '../src/Cartas/Palo'
+import Palo from '../src/Cartas/Palo'
 import chai = require('chai')
 
 describe('Naipe', function(){

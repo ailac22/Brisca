@@ -1,4 +1,4 @@
-import type { Palo } from "./Palo";
+import type Palo  from "./Palo";
 const assert = require('assert').strict;
 
 /**

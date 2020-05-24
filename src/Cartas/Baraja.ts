@@ -1,5 +1,5 @@
 import Naipe from './Naipe'
-import {Palo} from './Palo'
+import Palo from './Palo'
 import _ = require('lodash')
 
 export default class Baraja {
@@ -21,8 +21,7 @@ export default class Baraja {
     toString(){
         return this.baraja.map((n) => n.toString() + " ").join();
     }
-    getCard(){
-        console.log("length anterior: " + this.baraja.length)
+    public getCard(){
         return this.baraja.pop();
     }
 

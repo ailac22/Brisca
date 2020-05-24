@@ -9,7 +9,7 @@
     "test": "npm run build && ls ./build/test/ && npx mocha './build/test/**/*.js'",
     "build": "npx tsc",
     "build_tests": "",
-    "start": "npm run build && node build/index.js"
+    "start": "npm run build && node build/src/index.js"
   },
   "author": "Iván Moreno",
   "license": "ISC",
@@ -40,6 +40,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^7.1.2",
+    "ts-mockito": "^2.5.0",
     "typedoc": "^0.17.6",
     "typescript": "^3.8.3"
   }
