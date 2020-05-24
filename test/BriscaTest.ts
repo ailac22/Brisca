@@ -9,10 +9,6 @@ describe('Brisca', function(){
 
     it('Should', function(){
 
-        let obj = {
-            baraja: []
-        }
-        
         let mockedBaraja:Baraja = mock(Baraja);
 
         when(mockedBaraja.getCard())
@@ -29,7 +25,7 @@ describe('Brisca', function(){
         let bar:Baraja = instance(mockedBaraja);
         let bastos2 = new Naipe(2,Palo.Bastos)
 
-        let brisca = new Brisca(2, bar)
+        let brisca = new Brisca(bar)
         brisca.repartir();
 
         //Turno 1

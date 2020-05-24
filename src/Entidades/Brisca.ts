@@ -42,7 +42,8 @@ export default class Brisca {
 
     private cardsDrawn: Naipe[]
 
-    constructor (numPlayers: number, inputdeck: Baraja) {
+    constructor (inputdeck: Baraja) {
+        const numPlayers: number = 2;
         this.deck = inputdeck
         this.cardsDrawn = new Array(numPlayers).fill(null)
         this.players = new Array(numPlayers).fill(null).map(() => new Jugador());
@@ -105,36 +106,31 @@ export default class Brisca {
         }
     }
 
-    private paloPorDefectoDeTriunfo(initialPlayer: number): Palo {
 
-        return this.cardsDrawn[initialPlayer].palo
-            
 
-    }
     private verifyWinner(): number{
 
-        
-        this.nextPlayerTurn() //Return currentPlayerTurn to the player that started the round
-
-        let paloDeTriunfoEfectivo = this.paloDeTriunfo //this.cardsDrawn[this.currentPlayerTurn].palo 
-
-
-
-        let cardValues = this.cardsDrawn.map((card) => {
-
-            let hayTriunfos = this.cardsDrawn.some((card) => card.palo == this.paloDeTriunfo)
-            if ((hayTriunfos && card.palo != this.paloDeTriunfo) ||
-            (!hayTriunfos && card.palo != this.paloPorDefectoDeTriunfo(this.currentPlayerTurn)))
-                return 0
-            
+        if (!this.cardsDrawn.every((card) => card.palo == this.paloDeTriunfo) && 
+        this.cardsDrawn.some((card) => card.palo == this.paloDeTriunfo)){
+            return this.cardsDrawn.findIndex((card:Naipe) => card.palo == this.paloDeTriunfo)
+        }
+        else if (!this.cardsDrawn.every((card) => card.palo == this.cardsDrawn[this.currentPlayerTurn].palo)){
+            return this.currentPlayerTurn
+        }
+        let cardValues:number[] = this.cardsDrawn.map((card) => {
             let value = this.pointsByCard.get(card.numero)
             if (value == undefined) value = 0;
-            
             return value
         })
 
-        let maxValue = Math.max.apply(null,cardValues);
-        return cardValues.indexOf(maxValue)
+        if (cardValues.every((value) => value == 0)){
+            let maxOrder = Math.max.apply(null,this.cardsDrawn.map(card => card.numero));
+            return cardValues.indexOf(maxOrder)
+        }
+        else {
+            let maxValue = Math.max.apply(null,cardValues);
+            return cardValues.indexOf(maxValue)
+        }
     }
 
     toString(){
@@ -178,7 +174,6 @@ export default class Brisca {
                     for (let player of este.players){
                         player.addCard(este.deck.getCard());
                     }
-                    console.log("players state\n" + este.players.toString())
                 }
             }
 

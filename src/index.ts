@@ -41,7 +41,7 @@ console.log("inicio") */
 
 
 
-let brisca = new Brisca(2,new Baraja)
+let brisca = new Brisca(new Baraja)
 
 brisca.setCallbackFunction((wha) => {
 
