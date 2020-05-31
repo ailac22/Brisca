@@ -193,9 +193,13 @@ export default class Brisca {
                 console.log(`Player ${winner} won round`)
                 
                 este.currentPlayerTurn = winner;
-                for (let player of este.players){
-                    player.addCard(este.deck.getCard());
-                }
+
+                let i = winner
+                do {
+                    este.players[i].addCard(este.deck.getCard())
+                    i = (i + 1) % este.players.length
+                } while (i != winner)
+                
                 ++este.roundNumber
                 this.transition('turno')
             }
