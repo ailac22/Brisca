@@ -42,6 +42,8 @@ export default class Brisca {
 
     private cardsDrawn: Naipe[]
 
+    private roundNumber: number = 0;
+
     constructor (inputdeck: Baraja) {
         const numPlayers: number = 2;
         this.deck = inputdeck
@@ -50,7 +52,6 @@ export default class Brisca {
         this.buildSM()
         
     }
-
 
     public setCallbackFunction(func){
 
@@ -61,10 +62,21 @@ export default class Brisca {
         this.gameFSM.handle("repartoInicial");
     }
 
+    public getPlayerPoints(id: number): number{
+        return _.sum(this.players[id].getWonCards().map((card) => this.pointsByCard.get(card.numero)))
+    }
+
+    public whosTurnIsIt():number {
+        return this.currentPlayerTurn
+    }
+
     public sacarCarta(playerNum: number, naipe: Naipe){
         this.gameFSM.handle('sacarCarta', {playerNum,naipe});
     }
 
+    public getRoundNumber(): number {
+        return this.roundNumber
+    }
 
     private nextPlayerTurn() {
         this.currentPlayerTurn = ++this.currentPlayerTurn % this.players.length
@@ -166,17 +178,27 @@ export default class Brisca {
             sacarCarta: function({playerNum, naipe}: {playerNum:number, naipe:Naipe}){
                 este.sacarCartaPrv(playerNum,naipe)
                 if (este.allCardsDrawn()){
-                    let winner = este.verifyWinner()
-                    this.emit('accion', {action: ActionType.PlayerWonRound, playerNum: winner})
-                    console.log(`Player ${winner} won round`)
-                    este.cardsDrawn.fill(null)
-                    este.currentPlayerTurn = winner;
-                    for (let player of este.players){
-                        player.addCard(este.deck.getCard());
-                    }
+                    this.transition('roundEnd')
                 }
             }
 
+          },
+          roundEnd: {
+
+            _onEnter: function(){
+                let winner = este.verifyWinner()
+                este.cardsDrawn.forEach((card:Naipe) => {este.players[winner].addWonCard(card)})
+                este.cardsDrawn.fill(null)
+                this.emit('accion', {action: ActionType.PlayerWonRound, playerNum: winner})
+                console.log(`Player ${winner} won round`)
+                
+                este.currentPlayerTurn = winner;
+                for (let player of este.players){
+                    player.addCard(este.deck.getCard());
+                }
+                ++este.roundNumber
+                this.transition('turno')
+            }
           },
 
           repartir: {

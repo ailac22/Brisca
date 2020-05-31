@@ -63,6 +63,18 @@ export default class Jugador {
         this.cartasGanadas.push(card);
     }
 
+    //TODO: This is returning by reference
+
+    /**
+     * Get all the cards won by the player so far
+     * 
+     * 
+     * @param card Card to be added to won cards
+     */
+    public getWonCards(): Naipe[] {
+        return this.cartasGanadas
+    }
+
     toString(){
         return 'Cartas: ' + this.cartas.map((n:Naipe) => n.toString()).join() + 
         '\nCartas Ganadas' + this.cartasGanadas.map((n:Naipe) => n.toString()).join()
