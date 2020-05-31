@@ -6,7 +6,7 @@
   "scripts": {
     "typedoc": "typedoc --out docs src",
     "lint": "eslint src/**.ts",
-    "test": "npm run build && ls ./build/test/ && npx mocha './build/test/**/*.js'",
+    "test": "npm run build && npx mocha './build/test/**/*.js'",
     "build": "npx tsc",
     "build_tests": "",
     "start": "npm run build && node build/src/index.js"
