@@ -137,7 +137,7 @@ export default class Brisca {
 
         if (cardValues.every((value) => value == 0)){
             let maxOrder = Math.max.apply(null,this.cardsDrawn.map(card => card.numero));
-            return cardValues.indexOf(maxOrder)
+            return this.cardsDrawn.findIndex((card:Naipe) => card.numero == maxOrder)
         }
         else {
             let maxValue = Math.max.apply(null,cardValues);
@@ -199,7 +199,7 @@ export default class Brisca {
                     este.players[i].addCard(este.deck.getCard())
                     i = (i + 1) % este.players.length
                 } while (i != winner)
-                
+
                 ++este.roundNumber
                 this.transition('turno')
             }
