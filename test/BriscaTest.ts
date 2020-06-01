@@ -31,6 +31,26 @@ describe('Brisca', function(){
         .thenReturn(new Naipe(8,Palo.Espadas))
         .thenReturn(new Naipe(6,Palo.Copas)) //Turno 6
         .thenReturn(new Naipe(10,Palo.Copas))
+        .thenReturn(new Naipe(9,Palo.Copas)) //Turno 7
+        .thenReturn(new Naipe(4,Palo.Bastos))
+        .thenReturn(new Naipe(12,Palo.Oros)) //Turno 8
+        .thenReturn(new Naipe(5,Palo.Bastos))
+        .thenReturn(new Naipe(10,Palo.Espadas)) //Turno 9
+        .thenReturn(new Naipe(5,Palo.Oros))
+        .thenReturn(new Naipe(4,Palo.Espadas)) //Turno 10
+        .thenReturn(new Naipe(6,Palo.Espadas))
+        .thenReturn(new Naipe(10,Palo.Bastos)) //Turno 11
+        .thenReturn(new Naipe(6,Palo.Bastos))
+        .thenReturn(new Naipe(3,Palo.Oros)) //Turno 12
+        .thenReturn(new Naipe(8,Palo.Bastos))
+        .thenReturn(new Naipe(9,Palo.Espadas)) //Turno 13
+        .thenReturn(new Naipe(12,Palo.Bastos))
+        .thenReturn(new Naipe(4,Palo.Oros)) //Turno 14
+        .thenReturn(new Naipe(6,Palo.Oros))
+        .thenReturn(new Naipe(2,Palo.Bastos)) //Turno 15
+        .thenReturn(new Naipe(7,Palo.Bastos))
+
+
 
         let bar:Baraja = instance(mockedBaraja);
         let bastos2 = new Naipe(2,Palo.Bastos)
@@ -143,6 +163,101 @@ describe('Brisca', function(){
         brisca.sacarCarta(0,new Naipe(7,Palo.Copas))
 
         chai.assert.equal(brisca.getPlayerPoints(0),19)
+        chai.assert.equal(brisca.getPlayerPoints(1),25)
+        chai.assert.equal(brisca.whosTurnIsIt(),0)
+
+        //Turno 7
+      
+        chai.assert.equal(brisca.getRoundNumber(),7)
+
+        brisca.sacarCarta(0,new Naipe(9,Palo.Copas))
+        brisca.sacarCarta(1,new Naipe(4,Palo.Bastos))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),19)
+        chai.assert.equal(brisca.getPlayerPoints(1),25)
+        chai.assert.equal(brisca.whosTurnIsIt(),1)
+
+        //Turno 8
+
+        brisca.sacarCarta(1,new Naipe(12,Palo.Oros))
+        brisca.sacarCarta(0,new Naipe(5,Palo.Bastos))
+
+        chai.assert.equal(brisca.getRoundNumber(),9)
+        chai.assert.equal(brisca.getPlayerPoints(0),23)
+        chai.assert.equal(brisca.getPlayerPoints(1),25)
+
+        //Turno 9
+
+        chai.assert.equal(brisca.whosTurnIsIt(),0)
+        brisca.sacarCarta(0,new Naipe(10,Palo.Espadas))
+        brisca.sacarCarta(1,new Naipe(11,Palo.Espadas))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),23)
+        chai.assert.equal(brisca.getPlayerPoints(1),30)
+
+        //Turno 10
+
+        chai.assert.equal(brisca.whosTurnIsIt(),1)
+
+        brisca.sacarCarta(1,new Naipe(8,Palo.Espadas))
+        brisca.sacarCarta(0,new Naipe(10,Palo.Copas))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),23)
+        chai.assert.equal(brisca.getPlayerPoints(1),32)
+        chai.assert.equal(brisca.getRoundNumber(),11)
+
+        //Turno 11
+
+        chai.assert.equal(brisca.whosTurnIsIt(),1)
+        brisca.sacarCarta(1,new Naipe(10,Palo.Bastos))
+        brisca.sacarCarta(0,new Naipe(6,Palo.Bastos))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),23)
+        chai.assert.equal(brisca.getPlayerPoints(1),34)
+
+        chai.assert.equal(brisca.getRoundNumber(),12)
+
+        //Turno 12
+
+        chai.assert.equal(brisca.whosTurnIsIt(),1)
+
+        brisca.sacarCarta(1,new Naipe(3,Palo.Oros))
+        brisca.sacarCarta(0,new Naipe(8,Palo.Bastos))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),33)
+        chai.assert.equal(brisca.getPlayerPoints(1),34)
+
+        //Turno 13
+
+        brisca.sacarCarta(0,new Naipe(1,Palo.Bastos))
+        brisca.sacarCarta(1,new Naipe(12,Palo.Bastos))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),48)
+        chai.assert.equal(brisca.getPlayerPoints(1),34)
+
+        //Turno 14
+
+        chai.assert.equal(brisca.whosTurnIsIt(),0)
+        chai.assert.equal(brisca.getRoundNumber(),14)
+
+        brisca.sacarCarta(0,new Naipe(4,Palo.Oros))
+        brisca.sacarCarta(1,new Naipe(5,Palo.Oros))
+
+        chai.assert.equal(brisca.getPlayerPoints(0),48)
+        chai.assert.equal(brisca.getPlayerPoints(1),34)
+
+        chai.assert.equal(brisca.whosTurnIsIt(),1)
+
+        //Turno 15
+
+        brisca.sacarCarta(1,new Naipe(2,Palo.Bastos)) 
+        brisca.sacarCarta(0,new Naipe(7,Palo.Bastos))
+
+        chai.assert.equal(brisca.whosTurnIsIt(),0)
+
+        chai.assert.equal(brisca.getPlayerPoints(0),48)
+        chai.assert.equal(brisca.getPlayerPoints(1),34)
+
 
         //chai.assert.equal(brisca.whosTurnIsIt(),1)
         //chai.assert.equal(brisca.getPlayerPoints(),1)
