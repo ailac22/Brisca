@@ -112,8 +112,11 @@ export default class Brisca {
         for (let player of this.players) {
             for (let i = 0; i < 3; ++i){
                 let card = this.deck.getCard()
+
+                console.log(JSON.stringify(card))
                 player.addCard(card)
-                this.gameFSM.emit('action', { action: ActionType.CardDelivered });
+                console.log("index of " + this.players.indexOf(player))
+                this.gameFSM.emit('action', { action: ActionType.CardDelivered, player: this.players.indexOf(player), card });
             }
         }
     }

@@ -3,13 +3,9 @@ const assert = require('assert').strict;
 import _ = require('lodash')
 
 export default class Jugador {
-    private id: Number = 0
     private cartas: Naipe[] = []
     private cartasGanadas: Naipe[] = []
 
-    constructor () {
-      this.id = 0
-    }
 
     /**
      * Checks if this player has a card
