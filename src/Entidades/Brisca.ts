@@ -7,8 +7,12 @@ import Palo from '../Cartas/Palo'
 
 
 enum ActionType {
+    CartaDeTriunfoInfo = "CartaDeTriunfoInfo",
+    RoundStarted = "RoundStarted",
+    RoundTurn = "RoundTurn",
     CardDelivered = "CardDelivered",
-    PlayerWonRound = "PlayerWonRound"
+    PlayerWonRound = "PlayerWonRound",
+    CardDrawn = "CardDrawn"
 }
 
 interface ActionInterface {
@@ -63,6 +67,7 @@ export default class Brisca {
     }
 
     public getPlayerPoints(id: number): number{
+        
         return _.sum(this.players[id].getWonCards().map((card) => this.pointsByCard.get(card.numero)))
     }
 
@@ -71,6 +76,7 @@ export default class Brisca {
     }
 
     public sacarCarta(playerNum: number, naipe: Naipe){
+        console.log("sacar carta " + naipe.toString())
         this.gameFSM.handle('sacarCarta', {playerNum,naipe});
     }
 
@@ -84,15 +90,23 @@ export default class Brisca {
 
     private sacarCartaPrv(playerNum: number, naipe: Naipe): boolean {
         
+        console.log("sacarCartaPrv")
         if (playerNum < 0 || playerNum >= this.players.length) return false;
         if (playerNum != this.currentPlayerTurn) return false;
 
         if (this.players[playerNum].hasCard(naipe)) {
+            console.log("this player has card")
             this.players[playerNum].takeAwayCard(naipe)
             this.cardsDrawn[playerNum] = naipe
+            this.gameFSM.emit('action', { action: ActionType.CardDrawn, player: playerNum, card: naipe, exclusive: false});
             console.log(`Player ${playerNum} drew card ${naipe}`)
             this.nextPlayerTurn()
-        } 
+            if (!this.allCardsDrawn())
+                this.gameFSM.emit('action', { action: ActionType.RoundTurn, player: this.whosTurnIsIt(), exclusive: false });
+        }
+        else {
+            console.log("this player has not the card")
+        }
     }
 
     private allCardsDrawn(){
@@ -106,17 +120,15 @@ export default class Brisca {
     private repartoInicialPrv() {
 
         this.cartaDeTriunfo = this.deck.getCard()
+        this.gameFSM.emit('action', { action: ActionType.CartaDeTriunfoInfo, card: this.cartaDeTriunfo, exclusive: false});
         this.paloDeTriunfo = this.cartaDeTriunfo.palo
         this.currentPlayerTurn = 0;
         /* repartir */
         for (let player of this.players) {
             for (let i = 0; i < 3; ++i){
                 let card = this.deck.getCard()
-
-                console.log(JSON.stringify(card))
                 player.addCard(card)
-                console.log("index of " + this.players.indexOf(player))
-                this.gameFSM.emit('action', { action: ActionType.CardDelivered, player: this.players.indexOf(player), card });
+                this.gameFSM.emit('action', { action: ActionType.CardDelivered, player: this.players.indexOf(player), card, exclusive: true });
             }
         }
     }
@@ -124,7 +136,6 @@ export default class Brisca {
 
 
     private verifyWinner(): number{
-
         if (!this.cardsDrawn.every((card) => card.palo == this.paloDeTriunfo) && 
         this.cardsDrawn.some((card) => card.palo == this.paloDeTriunfo)){
             return this.cardsDrawn.findIndex((card:Naipe) => card.palo == this.paloDeTriunfo)
@@ -132,6 +143,7 @@ export default class Brisca {
         else if (!this.cardsDrawn.every((card) => card.palo == this.cardsDrawn[this.currentPlayerTurn].palo)){
             return this.currentPlayerTurn
         }
+
         let cardValues:number[] = this.cardsDrawn.map((card) => {
             let value = this.pointsByCard.get(card.numero)
             if (value == undefined) value = 0;
@@ -178,7 +190,14 @@ export default class Brisca {
           },
           turno: {
               
+            _onEnter: function(){
+                
+                this.emit('action', { action: ActionType.RoundStarted, player: este.whosTurnIsIt(), exclusive: false });
+                this.emit('action', { action: ActionType.RoundTurn, player: este.whosTurnIsIt(), exclusive: false });
+            },
+
             sacarCarta: function({playerNum, naipe}: {playerNum:number, naipe:Naipe}){
+                console.log("hola")
                 este.sacarCartaPrv(playerNum,naipe)
                 if (este.allCardsDrawn()){
                     this.transition('roundEnd')
@@ -192,19 +211,34 @@ export default class Brisca {
                 let winner = este.verifyWinner()
                 este.cardsDrawn.forEach((card:Naipe) => {este.players[winner].addWonCard(card)})
                 este.cardsDrawn.fill(null)
-                this.emit('accion', {action: ActionType.PlayerWonRound, playerNum: winner})
-                console.log(`Player ${winner} won round`)
-                
+
                 este.currentPlayerTurn = winner;
 
                 let i = winner
                 do {
-                    este.players[i].addCard(este.deck.getCard())
+                    let card = este.deck.getCard();
+                    este.players[i].addCard(card)
+                    this.emit('action', { action: ActionType.CardDelivered, player: i, card, exclusive: true });
                     i = (i + 1) % este.players.length
                 } while (i != winner)
 
+
+                let playersScore = new Array(este.players.length).fill(null).map((cv,index) => {
+                    console.log(index)
+                    console.log(este.getPlayerPoints(index))
+                    return este.getPlayerPoints(index)
+                })
+                console.log(`puntuaciones:  ${playersScore}`)
+                this.emit('action', {action: ActionType.PlayerWonRound, playerNum: winner, playersScore, exclusive: false})
+                console.log(`Player ${winner} won round`)
+                
+
                 ++este.roundNumber
-                this.transition('turno')
+
+                setTimeout( () => {
+                    this.transition('turno');
+                }, 8000 );
+                
             }
           },
 

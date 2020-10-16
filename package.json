@@ -9,13 +9,14 @@
     "test": "npm run build && npx mocha './build/test/**/*.js'",
     "build": "npx tsc",
     "build_tests": "",
-    "start": "npm run build && node build/src/index.js"
+    "start": "npm run build && cp /media/ivan/Proyectos2/cartillas/src/public/client.js /media/ivan/Proyectos2/cartillas/build/src/public/ && cp /media/ivan/Proyectos2/cartillas/src/public/index.html /media/ivan/Proyectos2/cartillas/build/src/public/ && node build/src/index.js"
   },
   "author": "Iván Moreno",
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
     "@types/chai": "^4.2.11",
+    "@types/jquery": "^3.5.0",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.2",
     "express": "^4.17.1",

@@ -53,7 +53,6 @@ describe('Brisca', function(){
 
 
         let bar:Baraja = instance(mockedBaraja);
-        let bastos2 = new Naipe(2,Palo.Bastos)
 
         let brisca = new Brisca(bar)
         brisca.repartir();
@@ -269,14 +268,24 @@ describe('Brisca', function(){
         let mockedBaraja:Baraja = mock(Baraja);
 
         when(mockedBaraja.getCard())
-        .thenReturn(new Naipe(2,Palo.Bastos))
+        .thenReturn(new Naipe(2,Palo.Bastos)) //Carta de triunfo
+        .thenReturn(new Naipe(3,Palo.Oros))  //Cartas jugador 0
+        .thenReturn(new Naipe(10,Palo.Oros))
+        .thenReturn(new Naipe(1,Palo.Bastos))
+        .thenReturn(new Naipe(7,Palo.Espadas)) //Cartas jugador 1
+        .thenReturn(new Naipe(5,Palo.Copas))
+        .thenReturn(new Naipe(12,Palo.Oros))
 
         let bar:Baraja = instance(mockedBaraja);
-        let bastos2 = new Naipe(2,Palo.Bastos)
 
         let brisca = new Brisca(bar)
         brisca.repartir();
 
+        brisca.sacarCarta(0,new Naipe(3,Palo.Oros))
+        brisca.sacarCarta(1,new Naipe(12,Palo.Oros))
+
+        console.log(brisca.getPlayerPoints(0))
+        console.log(brisca.getPlayerPoints(1))
         //Turno 0
         //brisca.sacarCarta(0,new Naipe(3,Palo.Bastos))
         //brisca.sacarCarta(1,new Naipe(7,Palo.Espadas))

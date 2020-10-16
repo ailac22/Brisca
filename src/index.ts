@@ -19,11 +19,19 @@ http.listen(5000, () => {
 
 io.on('connection', (socket) => {
 
+    socket.on('carta_sacada', (msg) => {
+        let naipe = new Naipe(msg.mNumero,msg.mPalo)
+        console.log('whaaa', sockets.indexOf(socket), 333)
+        brisca.sacarCarta(sockets.indexOf(socket),naipe)
+    });
     sockets.push(socket)
-console.log('a user connected');
+    socket.emit('info_jugador', {numJugador: sockets.length - 1})
+    console.log('a user connected');
 
+    if (sockets.length == 2){
+        brisca.repartir();
+    }
 
-brisca.repartir();
 //brisca.sacarCarta(0,new Naipe(2,Palo.Bastos))
 //brisca.sacarCarta(1,new Naipe(7,Palo.Bastos))
 });
@@ -35,11 +43,18 @@ let brisca = new Brisca(new Baraja)
 
 brisca.setCallbackFunction((wha) => {
 
-    if (wha.player < sockets.length){
-    console.log("will be emitting" + wha.player)
-        sockets[wha.player].emit('action', wha)
-        console.log("action")
-    }
+    
+    //if (wha.player < sockets.length){
+        console.log("will be emitting" + wha.action)
+        if (wha.exclusive){
+            console.log('emitting exclusive event')
+            sockets[wha.player].emit('action', wha)
+        }
+        else {
+            console.log('broadcast event')
+            io.emit('action', wha)
+        }
+    //}
 })
 
 
