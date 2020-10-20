@@ -7,6 +7,7 @@ let app = require('express')();
 let http = require('http').createServer(app);
 let io = require('socket.io')(http);
 const path = require('path');
+import winston = require('winston')
 
 let sockets = new Array()
 
@@ -16,6 +17,26 @@ app.use(express.static(__dirname + '/public'))
 http.listen(5000, () => {
     console.log('listening on *:5000');
 });
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+      //
+      // - Write all logs with level `error` and below to `error.log`
+      // - Write all logs with level `info` and below to `combined.log`
+      //
+      new winston.transports.File({ filename: 'error.log', level: 'error' }),
+      new winston.transports.File({ filename: 'combined.log' }),
+    ],
+  });
+
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+  }));
+
+  
 
 io.on('connection', (socket) => {
 
@@ -36,10 +57,9 @@ io.on('connection', (socket) => {
 //brisca.sacarCarta(1,new Naipe(7,Palo.Bastos))
 });
 
-console.log("inicio")
 
 
-let brisca = new Brisca(new Baraja)
+let brisca = new Brisca(new Baraja, logger)
 
 brisca.setCallbackFunction((wha) => {
 

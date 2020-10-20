@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "typedoc": "typedoc --out docs src",
-    "lint": "eslint src/**.ts",
-    "test": "npm run build && npx mocha './ build/test/**/*.js'",
+    "lint": "npx eslint --fix src/**.ts",
+    "test": "npm run build && npx mocha './build/test/**/*.js'",
     "build": "npx tsc",
     "build_tests": "",
     "start": "npm run build && copyfiles .\\src\\public\\client.js .\\build\\src\\public\\ && copyfiles .\\src\\public\\index.html .\\build\\src\\public\\ && node .\\build\\src\\index.js"
-    },
+  },
   "author": "Iván Moreno",
   "license": "ISC",
   "dependencies": {
@@ -25,7 +25,8 @@
     "machina": "^4.0.2",
     "save-dev": "0.0.1-security",
     "socket.io": "^2.3.0",
-    "utf-8-validate": "^5.0.2"
+    "utf-8-validate": "^5.0.2",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -42,7 +43,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-standard": "^4.0.1",
-    "mocha": "^7.1.2",
+    "mocha": "^8.2.0",
     "ts-mockito": "^2.5.0",
     "typedoc": "^0.17.6",
     "typescript": "^3.9.7"

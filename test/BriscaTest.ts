@@ -4,6 +4,28 @@ import Palo from '../src/Cartas/Palo'
 import Baraja from '../src/Cartas/Baraja'
 import { mock, when, instance } from 'ts-mockito';
 import chai = require('chai')
+import winston = require('winston')
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'hey' },
+    transports: [
+      //
+      // - Write all logs with level `error` and below to `error.log`
+      // - Write all logs with level `info` and below to `combined.log`
+      //
+      new winston.transports.Console()
+    ],
+  });
+
+function logRound(brisca:Brisca){
+    logger.log("info",`We're in round number ${brisca.getRoundNumber()}`)
+}
+
+function logTurn(brisca:Brisca){
+    logger.log("info",`It's player  ${brisca.whosTurnIsIt()}'s turn`)
+}
 
 describe('Brisca', function(){
 
@@ -54,7 +76,7 @@ describe('Brisca', function(){
 
         let bar:Baraja = instance(mockedBaraja);
 
-        let brisca = new Brisca(bar)
+        let brisca = new Brisca(bar, logger)
         brisca.repartir();
 
         //Turno 0
@@ -77,22 +99,37 @@ describe('Brisca', function(){
         //Turno 0 ha guanyat jugador 0
 
         //Turno 1 
+        logger.log("info",`- Turno 1 - `)
         
+        logRound(brisca)
+        logTurn(brisca)
         chai.assert.equal(brisca.getRoundNumber(),1)
         chai.assert.equal(brisca.whosTurnIsIt(),0)
+        
+        logger.log("info",`Player 1 draws 12 de Copas`)
+        brisca.sacarCarta(1,new Naipe(12,Palo.Copas)) //Jugador 1 intenta sacar carta sin ser su turno
 
-        brisca.sacarCarta(1,new Naipe(12,Palo.Copas))
-
+        
         chai.assert.equal(brisca.whosTurnIsIt(),0)
+        logger.log("info",`It's player ${brisca.whosTurnIsIt()}'s turn`)
 
+        logger.log("info",`Jugador 0 saca el 10 de Oros`)
         brisca.sacarCarta(0,new Naipe(10,Palo.Oros))
+
+        logRound(brisca)
         chai.assert.equal(brisca.getRoundNumber(),1)
+        logTurn(brisca)
         chai.assert.equal(brisca.whosTurnIsIt(),1)
 
+        logger.log("info",`Jugador 1 saca el 12 de Oros`)
         brisca.sacarCarta(1,new Naipe(12,Palo.Copas))
+
+
 
         chai.assert.equal(brisca.getPlayerPoints(0),16)
         chai.assert.equal(brisca.getPlayerPoints(1),0)
+
+        console.log("info", "- Fin del turno 1 -")
 
         //Turno 2 (by lydia)
 
@@ -278,14 +315,12 @@ describe('Brisca', function(){
 
         let bar:Baraja = instance(mockedBaraja);
 
-        let brisca = new Brisca(bar)
+        let brisca = new Brisca(bar, logger)
         brisca.repartir();
 
         brisca.sacarCarta(0,new Naipe(3,Palo.Oros))
         brisca.sacarCarta(1,new Naipe(12,Palo.Oros))
 
-        console.log(brisca.getPlayerPoints(0))
-        console.log(brisca.getPlayerPoints(1))
         //Turno 0
         //brisca.sacarCarta(0,new Naipe(3,Palo.Bastos))
         //brisca.sacarCarta(1,new Naipe(7,Palo.Espadas))
