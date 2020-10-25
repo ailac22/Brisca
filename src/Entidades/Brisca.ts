@@ -51,6 +51,8 @@ export default class Brisca {
 
     private logger;
 
+    private mustDoPauses = true;
+
     constructor (inputdeck: Baraja, logger: any) {
       const numPlayers: number = 2
       this.deck = inputdeck
@@ -61,7 +63,12 @@ export default class Brisca {
     }
 
     public setCallbackFunction (func) {
+      
       this.gameFSM.on('action', func)
+    }
+
+    public configureMustDoPauses(flag){
+      this.mustDoPauses = flag;
     }
 
     public repartir () {
@@ -144,6 +151,34 @@ export default class Brisca {
       }
     }
 
+    private dealFollowingCards(winner: number) {
+
+
+      let i = winner
+      if (this.deck.numCards() !== 1){
+
+        do {
+          const card = this.deck.getCard()
+          this.players[i].addCard(card)
+          this.gameFSM.emit('action', { action: ActionType.CardDelivered, player: i, card, exclusive: true })
+          i = (i + 1) % this.players.length
+        } while (i != winner)
+
+      }
+      else {
+        this.logger.log({ level: 'info', message: 'Dealing last cards!' })
+        const card = this.deck.getCard()
+        this.players[i].addCard(card)
+        this.gameFSM.emit('action', { action: ActionType.CardDelivered, player: i, card, exclusive: true })
+        i = (i + 1) % this.players.length
+        this.players[i].addCard(this.cartaDeTriunfo)
+        let carta = this.cartaDeTriunfo
+        this.gameFSM.emit('action', { action: ActionType.CardDelivered, player: i, card: carta, exclusive: true })
+      }
+      
+
+    }
+
     private verifyWinner (): number {
       if (!this.cardsDrawn.every((card) => card.palo == this.paloDeTriunfo) &&
         this.cardsDrawn.some((card) => card.palo == this.paloDeTriunfo)) {
@@ -203,7 +238,6 @@ export default class Brisca {
             },
 
             sacarCarta: function ({ playerNum, naipe }: {playerNum:number, naipe:Naipe}) {
-              console.log("Sacar carta han")
               este.logger.log("info", "Sacar carta handler")
               este.sacarCartaPrv(playerNum, naipe)
               if (este.allCardsDrawn()) {
@@ -221,26 +255,35 @@ export default class Brisca {
 
               este.currentPlayerTurn = winner
 
-              let i = winner
-              do {
-                const card = este.deck.getCard()
-                este.players[i].addCard(card)
-                this.emit('action', { action: ActionType.CardDelivered, player: i, card, exclusive: true })
-                i = (i + 1) % este.players.length
-              } while (i != winner)
-
-              const playersScore = new Array(este.players.length).fill(null).map((cv, index) => {
-                return este.getPlayerPoints(index)
+              este.logger.log("info", "Calculating round end")
+              este.players.forEach( p => {
+                console.log(p.numCards())
               })
-              this.emit('action', { action: ActionType.PlayerWonRound, playerNum: winner, playersScore, exclusive: false })
+              if (este.players.some((player: Jugador) => {return player.numCards() != 0})){
+                const playersScore = new Array(este.players.length).fill(null).map((cv, index) => {
+                  return este.getPlayerPoints(index)
+                })
+                this.emit('action', { action: ActionType.PlayerWonRound, playerNum: winner, playersScore, exclusive: false })
 
-              ++este.roundNumber
+                ++este.roundNumber
 
-              /*                 setTimeout( () => {
+                if (este.deck.numCards() != 0){
+                  este.dealFollowingCards(winner)
+                  console.log("cards dealt")
+                }
+  
+                if (este.mustDoPauses){
+                  setTimeout( () => {
                     this.transition('turno');
-                }, 8000 ); */
-
-              this.transition('turno');
+                  }, 8000 );
+                }
+                else
+                  this.transition('turno');
+              }
+              else {
+                este.logger.log("info", "ENDGAME")
+                this.transition('endgame')
+              }
             }
           },
 
@@ -248,7 +291,10 @@ export default class Brisca {
 
           },
           endgame: {
-
+            _onEnter: function () {
+              este.logger.log("info", "FIN DE JUEGO")
+            }
+            
           }
 
         }

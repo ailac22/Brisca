@@ -41,9 +41,11 @@ const logger = winston.createLogger({
 io.on('connection', (socket) => {
 
     socket.on('carta_sacada', (msg) => {
-        let naipe = new Naipe(msg.mNumero,msg.mPalo)
-        console.log('whaaa', sockets.indexOf(socket), 333)
-        brisca.sacarCarta(sockets.indexOf(socket),naipe)
+        if (msg != null){
+            let naipe = new Naipe(msg.mNumero,msg.mPalo)
+            console.log('whaaa', sockets.indexOf(socket), 333)
+            brisca.sacarCarta(sockets.indexOf(socket),naipe)
+        }
     });
     sockets.push(socket)
     socket.emit('info_jugador', {numJugador: sockets.length - 1})
@@ -60,6 +62,8 @@ io.on('connection', (socket) => {
 
 
 let brisca = new Brisca(new Baraja, logger)
+
+brisca.configureMustDoPauses(false)
 
 brisca.setCallbackFunction((wha) => {
 

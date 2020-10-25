@@ -9,7 +9,7 @@
     "test": "npm run build && npx mocha './build/test/**/*.js'",
     "build": "npx tsc",
     "build_tests": "",
-    "start": "npm run build && copyfiles .\\src\\public\\client.js .\\build\\src\\public\\ && copyfiles .\\src\\public\\index.html .\\build\\src\\public\\ && node .\\build\\src\\index.js"
+    "start": "npm run build && node .\\build\\src\\index.js"
   },
   "author": "Iván Moreno",
   "license": "ISC",

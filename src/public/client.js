@@ -9,9 +9,10 @@ $( document ).ready( () => {
   $("#buttons").children().each((index,elem) => {
     
     elem.onclick = () => {
-      console.log(elem.innerHTML)
       socket.emit('carta_sacada', cartas[index])
       cartas[index] = null
+      console.log("done")
+      $("#buttons").children().eq(index).html(`no hay carta`)
     }
   })
   socket.on('info_jugador', (msg) =>{
@@ -22,11 +23,10 @@ $( document ).ready( () => {
   socket.on('action', function(msg){
     if (msg.action === "CardDelivered"){
 
-        console.log(msg)
         let empty = cartas.indexOf(null)
         console.log("empty " + empty)
         cartas[empty] = msg.card
-        console.log($("#buttons").children())
+        
         $("#buttons").children().eq(empty).html(`${msg.card.mNumero} de ${msg.card.mPalo}`)
       
     }
@@ -37,6 +37,8 @@ $( document ).ready( () => {
         $('#slotCartaCero').html(`Carta sacada por jugador cero: ${cartasSacadas[0].mNumero} de ${cartasSacadas[0].mPalo}`)
       if (cartasSacadas[1] != null)
         $('#slotCartaUno').html(`Carta sacada por jugador uno: ${cartasSacadas[1].mNumero} de ${cartasSacadas[1].mPalo}`)
+
+
     }
     else if (msg.action === "CartaDeTriunfoInfo"){
       $('#cartaTriunfo').html(`Carta de triunfo: ${msg.card.mNumero} de ${msg.card.mPalo}`)

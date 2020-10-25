@@ -46,7 +46,6 @@ export default class Jugador {
 
         if (this.cartas.length >= 3) return;
         this.cartas.push(card)
-        
     }
 
     /**

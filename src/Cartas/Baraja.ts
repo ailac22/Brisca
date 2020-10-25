@@ -25,7 +25,7 @@ export default class Baraja {
         return this.baraja.pop();
     }
 
-    numCards(){
+    public numCards(){
         return this.baraja.length;
     }
 }

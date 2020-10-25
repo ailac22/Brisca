@@ -12,12 +12,13 @@ const logger = winston.createLogger({
     defaultMeta: { service: 'hey' },
     transports: [
       //
-      // - Write all logs with level `error` and below to `error.log`
-      // - Write all logs with level `info` and below to `combined.log`
       //
-      new winston.transports.Console()
+      new winston.transports.Console({
+        silent: true
+      })
     ],
   });
+
 
 function logRound(brisca:Brisca){
     logger.log("info",`We're in round number ${brisca.getRoundNumber()}`)
@@ -79,6 +80,7 @@ describe('Brisca', function(){
         let brisca = new Brisca(bar, logger)
         brisca.repartir();
 
+        brisca.configureMustDoPauses(false);
         //Turno 0
         brisca.sacarCarta(0,new Naipe(3,Palo.Bastos))
 
@@ -108,7 +110,7 @@ describe('Brisca', function(){
         
         logger.log("info",`Player 1 draws 12 de Copas`)
         brisca.sacarCarta(1,new Naipe(12,Palo.Copas)) //Jugador 1 intenta sacar carta sin ser su turno
-
+        
         
         chai.assert.equal(brisca.whosTurnIsIt(),0)
         logger.log("info",`It's player ${brisca.whosTurnIsIt()}'s turn`)
@@ -129,7 +131,7 @@ describe('Brisca', function(){
         chai.assert.equal(brisca.getPlayerPoints(0),16)
         chai.assert.equal(brisca.getPlayerPoints(1),0)
 
-        console.log("info", "- Fin del turno 1 -")
+        logger.log("info", "- Fin del turno 1 -")
 
         //Turno 2 (by lydia)
 
