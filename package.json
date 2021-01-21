@@ -24,7 +24,7 @@
     "lodash": "^4.17.20",
     "machina": "^4.0.2",
     "save-dev": "0.0.1-security",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "utf-8-validate": "^5.0.2",
     "winston": "^3.3.3"
   },
